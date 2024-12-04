@@ -1,0 +1,61 @@
+body{
+    background-color: grey  ;
+}
+
+form#productForm {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #f7f7f7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form#productForm input, form#productForm button {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+form#productForm button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form#productForm button:hover {
+    background-color: #0056b3;
+}
+
+#productsContainer {
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.product {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product h3 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.product p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+
+    <form id="productForm">
+    <input type="text" id="title" placeholder="Título" required>
+    <input type="text" id="description" placeholder="Descripción" required>
+    <input type="text" id="code" placeholder="Código" required>
+    <input type="number" id="price" placeholder="Precio" required>
+    <input type="number" id="stock" placeholder="Stock" required>
+    <input type="text" id="category" placeholder="Categoría" required>
+    <button type="submit">Agregar Producto</button>
+</form>
+
+<div id="productsContainer"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/rTProducts.js"></script>
+</body>
+</html>
