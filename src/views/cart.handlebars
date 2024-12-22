@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Carrito</title>
+</head>
+<body>
+    <h1>Carrito de Compras</h1>
+    <div id="cart" data-cart-id="{{cartId}}">
+        {{#if products.length}}
+            <ul>
+                {{#each products}}
+                    <li id="product-{{this._id}}">
+                        <strong>Producto:</strong> {{this.name}} <br>
+                        <strong>Precio:</strong> ${{this.price}} <br>
+                        <strong>Cantidad:</strong>
+                        <button onclick="updateQuantity('{{../cartId}}', '{{this._id}}', -1, {{this.stock}})">-</button>
+                        <span id="quantity-{{this._id}}">{{this.quantity}}</span>
+                        <button onclick="updateQuantity('{{../cartId}}', '{{this._id}}', 1, {{this.stock}})">+</button> <br>
+                        <button onclick="deleteProduct('{{../cartId}}', '{{this._id}}')">Eliminar producto</button>
+                    </li>
+                {{/each}}
+            </ul>
+            <button id="emptyCartButton" onclick="deleteAll('{{cartId}}')">Vaciar carrito</button>
+        {{else}}
+            <p>El carrito está vacío. <a href="/">Ver Productos</a></p>
+        {{/if}}
+    </div>
+    <script src="/js/cart.js"></script>
+</body>
+</html>

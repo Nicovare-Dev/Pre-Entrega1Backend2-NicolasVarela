@@ -7,14 +7,54 @@ const productManager = new ProductManager();
 
 router.get('/', async (req, res) => {
     try {
-        const limit = parseInt(req.query.limit);
-        const products = await productManager.getAllProducts(limit);
-        res.json(products);
+        const { limit = 10, page = 1,sort, query } = req.query;
+
+        console.log("Filtro por categoria:", query);
+
+        const parsedLimit = parseInt(limit);
+        const parsedPage = parseInt(page);
+
+        let products = await productManager.getAllProducts();
+
+        if (query) {
+            products = products.filter(product => {
+                return product.category?.toLowerCase() === query.toLowerCase() ||
+                    (product.available?.toString() === query);
+            });
+        }
+
+        if (sort === 'asc') {
+            products.sort((a, b) => a.price - b.price);
+        } else if (sort === 'desc') {
+            products.sort((a, b) => b.price - a.price);
+        }
+
+        const totalProducts = products.length;
+        const totalPages = Math.ceil(totalProducts / parsedLimit);
+        const startIndex = (parsedPage - 1) * parsedLimit;
+        const endIndex = startIndex + parsedLimit;
+        const paginatedProducts = products.slice(startIndex, endIndex);
+
+        const response = {
+            status: 'success',
+            payload: paginatedProducts,
+            totalPages,
+            prevPage: parsedPage > 1 ? parsedPage - 1 : null,
+            nextPage: parsedPage < totalPages ? parsedPage + 1 : null,
+            page: parsedPage,
+            hasPrevPage: parsedPage > 1,
+            hasNextPage: parsedPage < totalPages,
+            prevLink: parsedPage > 1 ? `/products?limit=${parsedLimit}&page=${parsedPage - 1}&sort=${sort || ''}&query=${query || ''}` : null,
+            nextLink: parsedPage < totalPages ? `/products?limit=${parsedLimit}&page=${parsedPage + 1}&sort=${sort || ''}&query=${query || ''}` : null
+        };
+
+        res.json(response);
     } catch (error) {
         console.error(error);
-        res.status(404).json({ error: 'No se pudieron obtener los productos' });
+        res.status(500).json({ status: 'error', message: 'Error al obtener los productos' });
     }
 });
+
 
 
 router.get('/:pid', async (req, res) => {

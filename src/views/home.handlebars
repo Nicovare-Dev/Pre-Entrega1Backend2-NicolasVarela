@@ -12,9 +12,30 @@
     <div>
         <h1 id="titulo">Productos</h1>
     </div>
-
-    <div id="producto"></div>
-
+<div class="container">
+    {{#if products}}
+        {{#each products}}
+        
+            <div id="producto">
+                <h2>{{name}}</h2>
+                <p><strong>Descripción:</strong> {{description}}</p>
+                <p><strong>Código:</strong> {{code}}</p>
+                <p><strong>Precio:</strong> ${{price}}</p>
+                <p><strong>Stock:</strong> {{stock}}</p>
+                <p><strong>Categoría:</strong> {{category}}</p>
+                <button onclick="addToCart({ 
+                    id: '{{_id}}', 
+                    name: '{{name}}', 
+                    price: {{price}}, 
+                    quantity: 1 
+                })">Agregar al carrito</button>
+            </div>
+        
+        {{/each}}
+    {{else}}
+        <p>No hay productos disponibles para esta categoría.</p>
+    {{/if}}
+</div>
 
 </body>
 </html>

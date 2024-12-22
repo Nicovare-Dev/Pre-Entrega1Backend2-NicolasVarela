@@ -1,18 +1,18 @@
-const socket = io()
-const div = document.getElementById("producto") 
+async function addToCart(product) {
+    alert("Producto agregado al carrito exitosamente")
 
-socket.on("Productos", data => {
-    data.forEach(product => {
-        const productDiv = document.createElement('div');
-        productDiv.classList.add('product'); 
-        productDiv.innerHTML = `
-            <h3>${product.title}</h3>
-            <p><strong>Descripción:</strong> ${product.description}</p>
-            <p><strong>Código:</strong> ${product.code}</p>
-            <p><strong>Precio:</strong> $${product.price}</p>
-            <p><strong>Stock:</strong> ${product.stock}</p>
-            <p><strong>Categoría:</strong> ${product.category}</p>
-        `;
-        div.appendChild(productDiv);
-    })
-})
+    try {
+        const response = await fetch('/api/carts/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: product.id,
+                quantity: 1, 
+            }),
+        });
+    } catch (error) {
+        console.error('Error al realizar la petición:', error);
+    }
+}
