@@ -2,13 +2,17 @@ import express from 'express';
 import mongoose from 'mongoose';
 import productsRouter from './routes/productRoutes.js';
 import cartsRouter from './routes/cartRoutes.js';
+import sessionRoutes from './routes/sessions.js';
 import { create } from 'express-handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 import Handlebars from 'handlebars'; 
 import __dirname from './utils.js';
 import { Server } from 'socket.io';
 import Product from './models/product.js'; 
-import Cart from './models/cart.js'; // Aseguramos que se importa el modelo Cart
+import Cart from './models/cart.js';
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
+import './config/passport.js';
 
 const app = express();
 const PORT = 8080;
@@ -24,6 +28,9 @@ mongoose.connect('mongodb://localhost:27017/mi_base_de_datos', {
     .catch((error) => console.error('Error al conectar a MongoDB:', error));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(passport.initialize());
 
 app.use(express.static(__dirname + '/public'));
 
@@ -33,14 +40,15 @@ app.set('view engine', 'handlebars');
 
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/api/sessions', sessionRoutes);
+
 app.get('/realtimeproducts', (req, res) => {
     res.render('realTimeProducts', {});
 });
+
 app.get('/', async (req, res) => {
     try {
         const { limit = 10, page = 1, sort, query } = req.query;
-
-        console.log("Parámetros recibidos:", { limit, page, sort, query });
 
         let filter = {};
         if (query) {
@@ -117,11 +125,6 @@ app.get('/cart/:cid', async (req, res) => {
     }
 });
 
-
-app.use((req, res) => {
-    res.status(404).json({ error: 'Endpoint not found' });
-});
-
 const httpServer = app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
@@ -143,7 +146,6 @@ socketServer.on('connection', async (socket) => {
     });
 
     socket.on("newProduct", async (data) => {
-        console.log("Nuevo producto recibido: ", data);
         const newProduct = new Product(data); 
         try {
             await newProduct.save(); 
